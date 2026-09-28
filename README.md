@@ -68,8 +68,8 @@ pip install -r requirements.txt
 ### 3. Настройка `.env`:
 Создайте файл `.env` на основе шаблона `.env.example`:
 ```env
-BOT_TOKEN=ваш_токен_от_BotFather
-ADMIN_IDS=6504935113
+BOT_TOKEN=your_telegram_bot_token_here
+ADMIN_IDS=123456789
 DATABASE_URL=sqlite+aiosqlite:///activity_rating.db
 POINTS_PARTICIPANT=5
 POINTS_HELPER=10

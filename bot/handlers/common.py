@@ -77,7 +77,7 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession):
 
         await message.answer(
             f"👋 С возвращением, *{student.full_name}*!{admin_note}\n\n"
-            "Используйте кнопки меню ниже для работы с ботом:",
+            "Используйте команду /menu (или кнопку «📱 Инлайн-меню») для интерактивной работы в одном сообщении:",
             reply_markup=student_main_keyboard(is_admin=is_admin),
             parse_mode="Markdown",
         )

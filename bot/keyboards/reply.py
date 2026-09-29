@@ -5,6 +5,9 @@ def student_main_keyboard(is_admin: bool = False) -> ReplyKeyboardMarkup:
     """Главная клавиатура студента."""
     keyboard = [
         [
+            KeyboardButton(text="📱 Инлайн-меню"),
+        ],
+        [
             KeyboardButton(text="🎯 Отметить участие"),
             KeyboardButton(text="📊 Мой рейтинг"),
         ],

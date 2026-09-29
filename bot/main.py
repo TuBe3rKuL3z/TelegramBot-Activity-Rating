@@ -16,7 +16,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from bot.config import config
 from bot.database.base import engine, init_db
-from bot.handlers import admin_router, common_router, student_router
+from bot.handlers import admin_router, common_router, menu_router, student_router
 from bot.middlewares import DbSessionMiddleware, ThrottlingMiddleware, UserContextMiddleware
 
 # Настройка логирования
@@ -72,6 +72,7 @@ async def main() -> None:
 
     # 4. Регистрация роутеров
     dp.include_router(common_router)
+    dp.include_router(menu_router)
     dp.include_router(admin_router)
     dp.include_router(student_router)
 

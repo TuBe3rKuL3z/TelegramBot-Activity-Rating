@@ -73,6 +73,28 @@ async def get_top_students(session: AsyncSession, limit: int = 10) -> List[Stude
     return list(result.scalars().all())
 
 
+async def get_paginated_top_students(
+    session: AsyncSession,
+    page: int = 1,
+    page_size: int = 5,
+) -> tuple[List[Student], int, int]:
+    """Получить топ студентов с пагинацией (список студентов, общее количество, всего страниц)."""
+    count_stmt = select(func.count(Student.id))
+    total_count = (await session.execute(count_stmt)).scalar_one() or 0
+    total_pages = max(1, (total_count + page_size - 1) // page_size) if total_count > 0 else 1
+    page = max(1, min(page, total_pages))
+    offset = (page - 1) * page_size
+
+    stmt = (
+        select(Student)
+        .order_by(desc(Student.total_points), Student.full_name)
+        .offset(offset)
+        .limit(page_size)
+    )
+    result = await session.execute(stmt)
+    return list(result.scalars().all()), total_count, total_pages
+
+
 async def get_student_rank_and_stats(session: AsyncSession, student_id: int) -> Dict[str, Any]:
     """
     Рассчитать место студента в общем зачете и баллы за текущий календарный месяц.
@@ -178,6 +200,29 @@ async def get_active_events(session: AsyncSession) -> List[Event]:
     stmt = select(Event).where(Event.is_active == True).order_by(Event.event_date.desc())
     result = await session.execute(stmt)
     return list(result.scalars().all())
+
+
+async def get_paginated_active_events(
+    session: AsyncSession,
+    page: int = 1,
+    page_size: int = 4,
+) -> tuple[List[Event], int, int]:
+    """Получить список активных мероприятий с пагинацией (мероприятия, общее число, число страниц)."""
+    count_stmt = select(func.count(Event.id)).where(Event.is_active == True)
+    total_count = (await session.execute(count_stmt)).scalar_one() or 0
+    total_pages = max(1, (total_count + page_size - 1) // page_size) if total_count > 0 else 1
+    page = max(1, min(page, total_pages))
+    offset = (page - 1) * page_size
+
+    stmt = (
+        select(Event)
+        .where(Event.is_active == True)
+        .order_by(Event.event_date.desc())
+        .offset(offset)
+        .limit(page_size)
+    )
+    result = await session.execute(stmt)
+    return list(result.scalars().all()), total_count, total_pages
 
 
 async def get_all_events(session: AsyncSession, limit: int = 50) -> List[Event]:
